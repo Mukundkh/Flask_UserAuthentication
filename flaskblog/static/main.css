@@ -9,19 +9,19 @@ body {
   }
   
   .bg-steel {
-    background-color: #5f788a;
+    background-color: salmon;
   }
   
   .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: burlywood;
   }
   
   .site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
+    color: violet;
   }
   
   .site-header .navbar-nav .nav-link.active {
-    font-weight: 500;
+    font-weight: 800;
   }
   
   /* .content-section {
@@ -52,7 +52,7 @@ body {
   }
   
   .article-metadata {
-    padding-bottom: 1px;
+    padding-bottom: 3px;
     margin-bottom: 4px;
     border-bottom: 1px solid #e3e3e3
   }
@@ -72,7 +72,7 @@ body {
     height: 125px;
     width: 125px;
     margin-right: 20px;
-    margin-bottom: 16px;
+    margin-bottom: 34px;
   }
   
   .account-heading {
