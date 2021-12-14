@@ -1,7 +1,7 @@
 import secrets
 import os
 from flask import render_template, url_for, flash, redirect, request, abort
-from flaskblog import app, db, bcrypt, mail
+from flaskblog import application, db, bcrypt, mail
 from flaskblog.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm, UpdateAccountForm, PostForm
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
@@ -23,19 +23,19 @@ from flask_mail import Message
 # ]
 
 
-@app.route("/")
-@app.route("/home")
+@application.route("/")
+@application.route("/home")
 def home():
     posts = Post.query.all()
     return render_template('home.html', posts=posts)
 
 
-@app.route("/about")
+@application.route("/about")
 def about():
     return render_template('about.html', title='About')
 
 
-@app.route("/register", methods=['GET', 'POST'])
+@application.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -50,7 +50,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route("/login", methods=['GET', 'POST'])
+@application.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -65,7 +65,7 @@ def login():
             flash('Login Unsuccessful.', 'danger')
     return render_template('login.html', title='Login', form=form)
 
-@app.route("/logout")
+@application.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('home'))
@@ -75,12 +75,12 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/pics', picture_fn)
+    picture_path = os.path.join(application.root_path, 'static/pics', picture_fn)
     form_picture.save(picture_path)
 
     return picture_fn 
 
-@app.route("/account", methods=['GET','POST'])
+@application.route("/account", methods=['GET','POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
@@ -114,7 +114,7 @@ If you did not make this request then simply ignore this email and no changes wi
     mail.send(msg)
 
 
-@app.route("/reset_password", methods=['GET','POST'])
+@application.route("/reset_password", methods=['GET','POST'])
 def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -127,7 +127,7 @@ def reset_request():
     return render_template('reset_request.html', title='Reset Password', form=form)
      
 
-@app.route("/reset_password/<token>", methods=['GET','POST'])
+@application.route("/reset_password/<token>", methods=['GET','POST'])
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -145,7 +145,7 @@ def reset_token(token):
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
-@app.route("/post/new", methods=['GET', 'POST'])
+@application.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
     form = PostForm()
@@ -159,12 +159,12 @@ def new_post():
                            form=form, legend='New Post')
 
 
-@app.route("/post/<int:post_id>")
+@application.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', title=post.title, post=post)
 
-@app.route("/post/<int:post_id>/update", methods=['GET','POST'])
+@application.route("/post/<int:post_id>/update", methods=['GET','POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -184,7 +184,7 @@ def update_post(post_id):
     
 
  
-@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@application.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
