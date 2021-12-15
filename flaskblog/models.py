@@ -103,3 +103,4 @@ class PostResource(Resource):
 api.add_resource(PostResource, '/posts/<int:post_id>')
 
 
+#User schema and apis
