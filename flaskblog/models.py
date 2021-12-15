@@ -1,9 +1,15 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flaskblog import db, login_manager, application, api, ma
+from flaskblog import db, login_manager, application, api, ma, application
 from flask_login import UserMixin
 from flask import Flask, request
 from flask_restful import Api, Resource
+
+
+#new section of code
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -48,7 +54,7 @@ class Post(db.Model):
 #creating a schema based on Post model using marshmallow
 class PostSchema(ma.Schema):
     class Meta:
-        fields = ("id", "title", "content")
+        fields = ("id", "title", "content","user_id")
         model = Post
 
 post_schema = PostSchema()
@@ -58,12 +64,13 @@ posts_schema = PostSchema(many=True)
 class PostListResource(Resource):
     def get(self):
         posts = Post.query.all()
-        return post_schema.dump(posts)
+        return posts_schema.dump(posts)
     
     def post(self):
         new_post = Post(
             title=request.json['title'],
-            content=request.json['content']
+            content=request.json['content'],
+            user_id=request.json['user_id']
         )
         db.session.add(new_post)
         db.session.commit()
@@ -94,4 +101,5 @@ class PostResource(Resource):
         return '', 204
 
 api.add_resource(PostResource, '/posts/<int:post_id>')
+
 

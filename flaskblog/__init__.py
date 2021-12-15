@@ -26,8 +26,6 @@ application.config['MAIL_USE_TLS'] = True
 application.config['MAIL_USERNAME'] = os.environ.get('DB_USER')
 application.config['MAIL_PASSWORD'] = os.environ.get('DB_PASS')
 mail = Mail(application)
- 
-
 
 
 from flaskblog import routes
